@@ -1,0 +1,236 @@
+body{
+  background-color: #9ebcf6b2;
+}
+.box {
+  top: -5px;
+  left: -2px;
+  font-style: oblique;
+  position: fixed;
+  width: 1485px;
+  height: 91px;
+  background-color: #FFF7AC;
+  border: 1px solid #0000001A
+}
+.fio .group .variant{
+  color: #000;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: normal;
+}
+.fio{
+  margin-top: 40px;
+  margin-left: 100px;
+}
+.group{
+  margin-top: -20px;
+  margin-left: 700px;
+}
+.variant{
+  margin-top: -20px;
+  margin-left: 1280px;
+}
+
+.svg{
+  position: absolute;
+  left: 850px;
+  top: 200px;
+}
+main {
+  justify-content: center;
+  position: relative;
+}
+
+
+#text {
+  position: absolute;
+  top: 100px;
+  left: 751px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 24px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+.form-container{
+  position: absolute;
+  top: 100px;
+  left: 20px;
+}
+.p1 {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  width: max-content;
+
+}
+#xError{
+  top: 90px;
+  left: 50px;
+  width: max-content;
+}
+.p2 {
+  position: absolute;
+  top: 90px;
+  left: 20px;
+}
+
+.form #yError{
+  position: relative;
+  top: 80px;
+  left: 50px;
+  width: max-content;
+}
+
+.p3{
+  position: absolute;
+  top: 160px;
+  left: 20px;
+}
+.rValue{
+  position: absolute;
+  top: 30px;
+  font-size: 20px;
+}
+.form #rError{
+  position: relative;
+  top: 80px;
+  left: 50px;
+  width: max-content;
+}
+
+.submit {
+  position: absolute;
+  top: 230px;
+  left: 20px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #cecece;
+  background: #f6f6f6;
+  box-shadow: inset 0px 20px 20px #ffffff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  width: 120px;
+}
+.submit:hover {
+  box-shadow: inset 0px -20px 20px #ffffff;
+}
+.submit:active {
+  margin-top: 1px;
+  margin-bottom: -1px;
+  zoom: 1;
+}
+.submit:focus
+{
+  outline:none;
+}
+.table-main{
+  position: absolute;
+  left: 100px;
+  top: 50%;
+  width: 700px;
+}
+table {
+  table-layout: fixed;
+  width: 100%;
+  margin-top: 50px;
+  border-collapse: collapse;
+  border: 3px solid purple;
+}
+
+thead th:nth-child(1) {
+  width: 15%;
+}
+
+thead th:nth-child(2) {
+  width: 15%;
+}
+
+thead th:nth-child(3) {
+  width: 15%;
+}
+
+thead th:nth-child(4) {
+  width: 15%;
+}
+thead th:nth-child(5) {
+  width: 20%;
+}
+thead th:nth-child(6) {
+  width: 20%;
+}
+.time{
+  text-align: center;
+  position: absolute;
+  top: 10px;
+  margin-bottom: 20px;
+}
+
+
+.error {
+  color: red;
+
+}
+.glow-on-hover {
+  width: 220px;
+  height: 50px;
+  border: none;
+  outline: none;
+  color: #fff;
+  background: #111;
+  cursor: pointer;
+  top: 10px;
+  z-index: 0;
+  border-radius: 10px;
+}
+
+.glow-on-hover:before {
+  content: '';
+  background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+  position: absolute;
+  top: -2px;
+  left:-2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing 20s linear infinite;
+  opacity: 0;
+  transition: opacity .3s ease-in-out;
+  border-radius: 10px;
+}
+
+.glow-on-hover:active {
+  color: #000
+}
+
+.glow-on-hover:active:after {
+  background: transparent;
+}
+
+.glow-on-hover:hover:before {
+  opacity: 1;
+}
+
+.glow-on-hover:after {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+
+@keyframes glowing {
+  0% { background-position: 0 0; }
+  50% { background-position: 400% 0; }
+  100% { background-position: 0 0; }
+}
