@@ -2,15 +2,17 @@ package model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-@Table(name = "CheckAreaBean")
+@Table(name = "results")
 @Entity
 @Getter
 @Setter
+@ToString
 public class CheckAreaBean implements Serializable {
     @Id
     @Column(name = "id")
@@ -45,17 +47,17 @@ public class CheckAreaBean implements Serializable {
 
 
 
-    @Override
-    public String toString() {
-        return "CheckAreaBean{" +
-                "id=" + id +
-                ", x=" + x +
-                ", y=" + y +
-                ", r=" + r +
-                ", result=" + result +
-                ", currentTime=" + currentTime +
-                ", executionTime=" + executionTime +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "CheckAreaBean{" +
+//                "id=" + id +
+//                ", x=" + x +
+//                ", y=" + y +
+//                ", r=" + r +
+//                ", result=" + result +
+//                ", currentTime=" + currentTime +
+//                ", executionTime=" + executionTime +
+//                '}';
+//    }
 
 }

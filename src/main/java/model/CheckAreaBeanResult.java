@@ -56,14 +56,11 @@ public class CheckAreaBeanResult implements Serializable {
             entityTransaction.begin();
             long startTime = System.nanoTime();
             ValueValidator validator = new ValueValidator();
-            newResult.setType(type);
-            if(validator.validate(newResult.getX(), newResult.getY(), newResult.getR(), newResult.getType())){
+            if (validator.validate(newResult.getX(), newResult.getY(), newResult.getR(), newResult.getType())) {
+                newResult.setType(type);
                 newResult.setResult(getResult(newResult.getX(), newResult.getY(), newResult.getR()));
                 newResult.setExecutionTime((System.nanoTime() - startTime) / 1000);
                 newResult.setCurrentTime(getCurrentTimestamp());
-                if (resultList == null){
-
-                }
                 resultList.add(newResult);
                 System.out.println("New result " + newResult);
                 entityManager.persist(newResult);
@@ -71,8 +68,8 @@ public class CheckAreaBeanResult implements Serializable {
                 FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add(
                         "resultSet(" + newResult.getX() + ", " + newResult.getY() +
                                 ", " + newResult.getR() + ", " + newResult.getResult() + ");");
-            }
 
+            }
             // Очистка newResult для следующего ввода
             newResult = new CheckAreaBean();
 
