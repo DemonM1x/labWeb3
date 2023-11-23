@@ -68,6 +68,10 @@ main {
   width: max-content;
 
 }
+
+.button{
+  margin-right: 5px;
+}
 #xError{
   top: 90px;
   left: 50px;
@@ -175,6 +179,11 @@ thead th:nth-child(6) {
   color: red;
 
 }
+.clearButton{
+  position: absolute;
+  left: 180px;
+  top: 320px;
+}
 .glow-on-hover {
   width: 220px;
   height: 50px;
@@ -233,4 +242,13 @@ thead th:nth-child(6) {
   0% { background-position: 0 0; }
   50% { background-position: 400% 0; }
   100% { background-position: 0 0; }
+}
+
+.return{
+  position: absolute;
+  top: 30px;
+  left: 70px;
+}
+.selected{
+  color: #cdc684;
 }

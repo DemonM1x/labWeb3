@@ -1,6 +1,7 @@
 package model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString
 public class CheckAreaBean implements Serializable {
     @Id
@@ -33,9 +35,7 @@ public class CheckAreaBean implements Serializable {
     @Column(name = "type")
     @Enumerated(EnumType.ORDINAL)
     private Type type;
-    public CheckAreaBean() {
-        super();
-    }
+
     public CheckAreaBean(BigDecimal x, BigDecimal y, BigDecimal r, boolean result, Timestamp currentTime, long executionTime){
         this.x = x;
         this.y = y;

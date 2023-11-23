@@ -8,7 +8,7 @@ public class AreaResultChecker {
     }
     private static boolean isSecondSection(BigDecimal x, BigDecimal y, BigDecimal r){
         return x.compareTo(BigDecimal.ZERO) <= 0 && y.compareTo(BigDecimal.ZERO) >= 0 &&
-                x.abs().compareTo(r) >= 0 && y.abs().compareTo(r.divide(BigDecimal.valueOf(2) )) <= 0;
+                x.abs().compareTo(r) <= 0 && y.abs().compareTo(r.divide(BigDecimal.valueOf(2) )) <= 0;
     }
     private static boolean isThirdSection(BigDecimal x, BigDecimal y, BigDecimal r){
         return x.compareTo(BigDecimal.ZERO) <= 0 && y.compareTo(BigDecimal.ZERO) <= 0 &&

@@ -26,5 +26,9 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
+    <context-param>
+        <param-name>javax.faces.RESOURCE_EXCLUDES</param-name>
+        <param-value>/javax.faces.resource/*</param-value>
+    </context-param>
 
 </web-app>
