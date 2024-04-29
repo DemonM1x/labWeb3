@@ -187,7 +187,7 @@
 
         <move todir="${source.dir}" includeemptydirs="false">
             <fileset dir="${source.dir}">
-                <exclude name="**/*.jar"/> <!--fixed-->
+                <exclude name="**/*.jar"/>
             </fileset>
             <filtermapper >
                 <replacestring from="${alt.replace.from}" to="${alt.replace.to}" />
@@ -197,11 +197,5 @@
         <antcall target="clean"/>
         <antcall target="build"/>
 
-        <delete dir="${source.dir}"/>
-        <copy todir="${source.dir}">
-            <fileset dir="${alt.source.dir}"/>
-        </copy>
-
-        <delete dir="${alt.source.dir}"/>
     </target>
 </project>
