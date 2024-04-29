@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<project name="labWeb3"
+         default="build">
+    <property file="build.properties"/>
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <fileset dir="${basedir}/ant.lib/ant-contrib"/>
+        </classpath>
+    </taskdef>
+    <path id="classpath.source">
+        <fileset dir="src/main/lib" includes="**/*.jar"/>
+    </path>
+
+    <path id="classpath.testSource">
+        <fileset dir="src/test/lib" includes="**/*.jar"/>
+    </path>
+    <target name="jschset" description="Set the jar">
+        <copy file="${basedir}/ant.lib/ant-jsch/jsch-0.1.55.jar" tofile="${ant.home}/lib/jsch-0.1.55.jar"/>
+    </target>
+    <target name="init">
+        <mkdir dir="${target.classes}"/>
+        <mkdir dir="${target.tests}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac destdir="${target.classes}"
+               srcdir="${main.source}">
+            <classpath refid="classpath.source"/>
+        </javac>
+        <echo message="Successfully compiled main sources"/>
+    </target>
+    <target name="build" depends="compile">
+        <jar destfile="${dist.jar}" basedir="${target.classes}" compress="false" index="true">
+            <manifest>
+                <attribute name="Main-Class" value="Main"/>
+            </manifest>
+        </jar>
+        <echo message="Successfully built"/>
+    </target>
+    <target name="clean">
+        <trycatch>
+            <try>
+                <delete dir="${target}"/>
+            </try>
+            <catch>
+                <echo message="Couldn't clean automatically, please, check existence or access to ${target}"/>
+            </catch>
+        </trycatch>
+        <echo message="Cleaned target"/>
+    </target>
+    <target name="cleanDist" depends="clean">
+        <trycatch>
+            <try>
+                <delete dir="${dist.dir}"/>
+                <delete dir="${doc.dir}"/>
+            </try>
+            <catch>
+                <echo message="Couldn't clean dist automatically, please, check existence or access to ${dist.dir} and ${doc.dir}"/>
+            </catch>
+        </trycatch>
+        <echo message="Cleaned distribution, docs"/>
+    </target>
+    <target name="compileTest" depends="init">
+        <javac destdir="${target.tests}"
+               srcdir="${test.source}">
+            <classpath refid="classpath.testSource"/>
+        </javac>
+        <echo message="Successfully compiled tests"/>
+    </target>
+    <target name="test" depends="compileTest">
+        <mkdir dir="${test.result.dir}"/>
+        <junit printsummary="on"  fork="true">
+            <classpath>
+                <path refid="classpath.testSource"/>
+                <pathelement location="${target.tests}"/>
+            </classpath>
+            <batchtest todir="${test.result.dir}">
+                <formatter type="xml"/>
+                <fileset dir="${test.source}" includes="**/*Test.java" />
+            </batchtest>
+        </junit>
+    </target>
+    <target name="xml">
+        <xmlvalidate failonerror="no" lenient="yes">
+            <fileset dir="${project.dir}" includes="**/*.xml"/>
+        </xmlvalidate>
+    </target>
+    <target name="native2ascii">
+        <native2ascii encoding="UTF-8" src="src/main/resources" includes="*.properties" dest="${dist.dir}" />
+    </target>
+    <target name="scp" depends="build">
+        <sshexec
+                host="${host}"
+                port="${port}"
+                username="${remote_user}"
+                password="${remote_password}"
+                command="mkdir -p ${remote_dir_path}"
+                trust="true" />
+        <scp
+                file="${dist.jar}"
+                todir="${remote_user}:${remote_password}@${host}:${remote_dir_path}"
+                port="${port}"
+                trust="true"
+                />
+    </target>
+    <target name="history">
+        <trycatch>
+            <try>
+                <runtarget target="compile"/>
+                <echo message="--- NO ERRORS, COMPILE DONE ---"/>
+            </try>
+            <catch>
+                <exec executable="cmd" outputproperty="git_log_head">
+                    <arg value="/c"/>
+                    <arg value="git log --pretty=format:%h - %an, %ar : %s | head -1"/>
+                </exec>
+                <exec executable="cmd" outputproperty="git_log_tail">
+                    <arg value="/c"/>
+                    <arg value="git log --pretty=format:%h - %an, %ar : %s | tail -1"/>
+                </exec>
+                <if>
+                    <equals arg1="${git_log_head}" arg2="${git_log_tail}"/>
+                    <then>
+                        <echo message="I cannot build the first commit. Stop"/>
+                    </then>
+                    <else>
+                        <exec executable="cmd" output="diff">
+                            <arg value="/c"/>
+                            <arg value="git diff HEAD~1"/>
+                        </exec>
+                        <exec executable="cmd">
+                            <arg value="/c"/>
+                            <arg value="git reset HEAD~1 --hard"/>
+                        </exec>
+                        <runtarget target="history"/>
+                    </else>
+                </if>
+            </catch>
+        </trycatch>
+    </target>
+    <target name="report">
+        <trycatch>
+            <try>
+
+                <antcall target="test"/>
+
+                <tstamp>
+                    <format property="timestamp" pattern="MM-dd-yyyy-hh-mm-ss"/>
+                </tstamp>
+
+                <mkdir dir="${test.result.dir}/${timestamp}"/>
+
+                <move todir="${test.result.dir}/${timestamp}">
+                    <fileset dir="${test.result.dir}">
+                        <include name="*.xml"/>
+                    </fileset>
+                </move>
+
+                <exec executable="git">
+                    <arg value="add"/>
+                    <arg value="${test.result.dir}/${timestamp}"/>
+                </exec>
+
+                <exec executable="git">
+                    <arg value="commit"/>
+                    <arg value="-m"/>
+                    <arg value="Generate test report ${timestamp}"/>
+                </exec>
+            </try>
+            <catch>
+
+                <echo message="Tests went wrong, report isn't generated"/>
+            </catch>
+        </trycatch>
+    </target>
+
+    <target name="alt">
+        <copy todir="${alt.source.dir}">
+            <fileset dir="${source.dir}"/>
+        </copy>
+
+        <replace dir="${source.dir}" >
+            <exclude name="**/*.jar"/>
+            <replacefilter token="${alt.replace.from}"
+                           value="${alt.replace.to}"/>
+        </replace>
+
+        <move todir="${source.dir}" includeemptydirs="false">
+            <fileset dir="${source.dir}">
+                <exclude name="**/*.jar"/> <!--fixed-->
+            </fileset>
+            <filtermapper >
+                <replacestring from="${alt.replace.from}" to="${alt.replace.to}" />
+            </filtermapper>
+        </move>
+
+        <antcall target="clean"/>
+        <antcall target="build"/>
+
+        <delete dir="${source.dir}"/>
+        <copy todir="${source.dir}">
+            <fileset dir="${alt.source.dir}"/>
+        </copy>
+
+        <delete dir="${alt.source.dir}"/>
+    </target>
+</project>

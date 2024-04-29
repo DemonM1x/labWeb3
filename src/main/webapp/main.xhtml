@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">
+<h:head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <h:outputStylesheet library="css" name="mainWebSite.css" />
+
+    <title>Лабораторная работа по Веб-программированию</title>
+</h:head>
+<h:body>
+    <h:outputText value="Тестирование попадания точки на плоскость" id="text"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" class="svg" id="svg">
+        <line class="axis" x1="0" x2="300" y1="150" y2="150" stroke="black"></line>
+        <line class="axis" x1="150" x2="150" y1="0" y2="300" stroke="black"></line>
+
+        <polygon points="150,0 144,15 156,15" stroke="black"></polygon>
+        <polygon points="300,150 285,156 285,144" stroke="black"></polygon>
+
+        <line class="coor-line" x1="200" x2="200" y1="155" y2="145" stroke="black"></line>
+        <line class="coor-line" x1="250" x2="250" y1="155" y2="145" stroke="black"></line>
+
+        <line class="coor-line" x1="50"  x2="50"  y1="155" y2="145" stroke="black"></line>
+        <line class="coor-line" x1="100" x2="100" y1="155" y2="145" stroke="black"></line>
+
+        <line class="coor-line" x1="145" x2="155" y1="100" y2="100" stroke="black"></line>
+        <line class="coor-line" x1="145" x2="155" y1="50"  y2="50"  stroke="black"></line>
+
+        <line class="coor-line" x1="145" x2="155" y1="200" y2="200" stroke="black"></line>
+        <line class="coor-line" x1="145" x2="155" y1="250" y2="250" stroke="black"></line>
+
+        <text class="coor-text" x="195" y="140">R/2</text>
+        <text class="coor-text" x="248" y="140">R</text>
+
+        <text class="coor-text" x="40" y="140">-R</text>
+        <text class="coor-text" x="90" y="140">-R/2</text>
+
+        <text class="coor-text" x="160" y="105">R/2</text>
+        <text class="coor-text" x="160" y="55">R</text>
+
+        <text class="coor-text" x="160" y="205">-R/2</text>
+        <text class="coor-text" x="160" y="255">-R</text>
+
+        <text class="axis-text" x="290" y="170">x</text>
+        <text class="axis-text" x="160" y="13">y</text>
+
+        <!-- first figure-->
+        <rect x="50" y="100" width="100" height="50" style="fill:#ade0ab; stroke:#e8d51e; fill-opacity:0.3;" />
+
+        <!-- second figure-->
+        <polygon points="150,150 200,150, 150,250" style="fill:#94f5a1; stroke:#cdc684; fill-opacity:0.3;"></polygon>
+
+        <!-- third figure-->
+        <path d="M 150 250 A 100 100, 0, 0, 1, 50 150 L 150 150 Z" style="fill:#8eefde; stroke:#cdc684; fill-opacity:0.3;"></path>
+        <circle r="1" cx="150" cy="150" id="target-dot" fill="white"></circle>
+    </svg>
+
+<div class="form-container">
+    <h:form id="choose-form">
+        <div class="p1" id="selectX">
+                <h:outputLabel for="X" value="X: "/>
+            <p:inputNumber type="hidden"
+                           minValue="-4"
+                           maxValue="4"
+                           id="X"
+                           required="true"
+                           value="#{checkAreaGrushaResult.newResult.x}"/>
+            <p:commandButton  value="-4" onclick="setX(this)"/>
+            <p:commandButton  value="-3" onclick="setX(this)"/>
+            <p:commandButton  value="-2" onclick="setX(this)"/>
+            <p:commandButton  value="-1" onclick="setX(this)"/>
+            <p:commandButton  value="0" onclick="setX(this)"/>
+            <p:commandButton  value="1" onclick="setX(this)"/>
+            <p:commandButton  value="2" onclick="setX(this)"/>
+            <p:commandButton  value="3" onclick="setX(this)"/>
+            <p:commandButton  value="4" onclick="setX(this)"/>
+        </div>
+        <div class="p2" id="selectY">
+            <h:outputLabel value="Y: " id="Y" for="y-value"/>
+            <h:inputText id="y-value" a:placeholder="(-5; 3)" value="#{checkAreaGrushaResult.newResult.y}" required="true"> </h:inputText>
+            <label class="error" id="y-error"> </label>
+        </div>
+        <div class="p3" id="selectR">
+            <h:outputLabel value="R: "/>
+            <ace:sliderEntry id="r-value" min="1" max="4" stepPercent="16.66666666666666666" value="#{checkAreaGrushaResult.newResult.r}" onSlideEnd="updateR()"/>
+            <label id="show-r-value" class="rValue">1</label>
+        </div>
+        <div class="submit">
+        <h:commandButton value="Submit" action="#{checkAreaGrushaResult.addResult('SUBMIT')}" update="resultTable buttonUpdate" id="submit-button">
+        </h:commandButton>
+        </div>
+    </h:form>
+</div>
+    <div class="clearButton">
+    <h:form id="clear-form">
+        <h:commandButton value="Clear" action="#{checkAreaGrushaResult.clearResults()}" update="resultTable" id="clear" class="glow-on-hover btn-clear">
+        </h:commandButton>
+    </h:form>
+    </div>
+    <div class="table-main">
+
+        <h:dataTable id="resultTable" value="#{checkAreaGrushaResult.resultList}" var="result">
+            <h:column>
+                <f:facet name = "header">x</f:facet>
+                <h:outputText value="#{result.x}">
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name = "header">y</f:facet>
+                <h:outputText value=" #{result.y}">
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name = "header">r</f:facet>
+                #{result.r}
+            </h:column>
+            <h:column>
+                <f:facet name = "header">Итог</f:facet>
+                #{result.result ? "Hit" : "Miss"}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Текущее время</f:facet>
+                #{result.currentTime}
+            </h:column>
+            <h:column>
+                <f:facet name = "header">Время скрипта</f:facet>
+                #{result.executionTime}
+            </h:column>
+        </h:dataTable>
+    </div>
+    <div class="return">
+        <h:form>
+            <h:commandButton id="return" value="Вернуться" action="goToPageBack"/>
+        </h:form>
+    </div>
+    <h:form id="graphSelect">
+        <h:inputHidden id="graph-x" value="#{checkAreaGrushaResult.newResult.x}" />
+        <h:inputHidden id="graph-y" value="#{checkAreaGrushaResult.newResult.y}" />
+        <h:inputHidden id="graph-r" value="#{checkAreaGrushaResult.newResult.r}"/>
+        <h:commandButton value="submit" id="submit-click-button" name="updateGrushaValues" update="resultTable"
+                         action="#{checkAreaGrushaResult.addResult('CLICK')}"/>
+    </h:form>
+    <h:outputScript library="js" name="mainWebSite.js"/>
+    <h:outputScript id="repeat">
+        <ui:repeat var="result" value="#{checkAreaGrushaResult.resultList}">
+        resultSet('#{result.x}','#{result.y}','#{result.r}', '#{result.result}');
+        </ui:repeat>
+    </h:outputScript>
+    <h:outputScript id="buttonUpdate">
+        document.querySelectorAll('.p1 button').forEach(function (element) {
+            element.className = 'button';
+        })
+    </h:outputScript>
+
+</h:body>
+</html>
