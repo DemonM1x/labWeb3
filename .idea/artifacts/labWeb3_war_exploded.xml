@@ -20,7 +20,7 @@
           <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
           <element id="library" level="project" name="Maven: com.sun.faces:jsf-api:2.2.20" />
           <element id="library" level="project" name="Maven: org.primefaces:primefaces:11.0.0" />
-          <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.18.32" />
+          <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.18.30" />
           <element id="library" level="project" name="Maven: org.icefaces:icefaces-ace:4.3.0" />
           <element id="library" level="project" name="Maven: org.icefaces:icefaces:4.3.0" />
           <element id="library" level="project" name="Maven: jakarta.persistence:jakarta.persistence-api:3.0.0" />
@@ -56,6 +56,14 @@
           <element id="library" level="project" name="Maven: org.apiguardian:apiguardian-api:1.1.2" />
           <element id="library" level="project" name="Maven: ant-contrib:ant-contrib:1.0b3" />
           <element id="library" level="project" name="Maven: ant:ant:1.5" />
+          <element id="library" level="project" name="Maven: org.jacoco:org.jacoco.ant:0.8.7" />
+          <element id="library" level="project" name="Maven: org.jacoco:org.jacoco.core:0.8.7" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm:9.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm-commons:9.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm-analysis:9.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm-tree:9.1" />
+          <element id="library" level="project" name="Maven: org.jacoco:org.jacoco.report:0.8.7" />
+          <element id="library" level="project" name="Maven: org.jacoco:org.jacoco.agent:0.8.7" />
         </element>
       </element>
       <element id="directory" name="META-INF">
