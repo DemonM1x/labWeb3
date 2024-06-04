@@ -2,11 +2,14 @@ package model;
 
 import db.DAOFactory;
 import lombok.Getter;
+import mBean.Area;
+import mBean.PointCount;
 import validator.ValueValidator;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
@@ -21,6 +24,10 @@ public class
 CheckAreaBeanResult implements Serializable {
     private LinkedList<CheckAreaBean> resultList;
     private CheckAreaBean newResult;
+    @Inject
+    private PointCount pointCount;
+    @Inject
+    private Area area;
     public CheckAreaBeanResult(){
         loadDB();
         newResult = new CheckAreaBean();
@@ -49,6 +56,15 @@ CheckAreaBeanResult implements Serializable {
                 newResult.setCurrentTime(getCurrentTimestamp());
                 DAOFactory.getInstance().getResultDAO().addNewResult(newResult);
                 resultList.add(newResult);
+                pointCount.updatePointCount();
+                area.calculateArea(newResult.getR().doubleValue());
+
+                if (newResult.getResult()){
+                    pointCount.updateCorrectPoint();
+                }
+                else {
+                    pointCount.MissPlace();
+                }
                 System.out.println("New result " + newResult);
                 FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add(
                         "resultSet("+ newResult.getX() +", "+ newResult.getY() +","+ newResult.getR()+","+ newResult.getResult() +");");
