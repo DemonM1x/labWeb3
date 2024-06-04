@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <project name="labWeb3"
+
          default="build">
     <property file="build.properties"/>
-    <taskdef resource="net/sf/antcontrib/antlib.xml">
-        <classpath>
-            <fileset dir="${basedir}/ant.lib/ant-contrib"/>
-        </classpath>
+    <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="ant.lib/ant-contrib/ant-contrib-1.0b3.jar">
+    </taskdef>
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="${basedir}/ant.lib/jacocoant.jar" />
     </taskdef>
     <path id="classpath.source">
         <fileset dir="src/main/lib" includes="**/*.jar"/>
@@ -13,6 +14,7 @@
 
     <path id="classpath.testSource">
         <fileset dir="src/test/lib" includes="**/*.jar"/>
+        <fileset dir="${dist.dir}" includes="**/*.jar"/>
     </path>
     <target name="jschset" description="Set the jar">
         <copy file="${basedir}/ant.lib/ant-jsch/jsch-0.1.55.jar" tofile="${ant.home}/lib/jsch-0.1.55.jar"/>
@@ -60,10 +62,12 @@
         </trycatch>
         <echo message="Cleaned distribution, docs"/>
     </target>
-    <target name="compileTest" depends="init">
+    <target name="compileTest" depends="build">
         <javac destdir="${target.tests}"
                srcdir="${test.source}">
-            <classpath refid="classpath.testSource"/>
+            <classpath
+                    refid="classpath.testSource"
+            />
         </javac>
         <echo message="Successfully compiled tests"/>
     </target>
@@ -74,7 +78,7 @@
                 <path refid="classpath.testSource"/>
                 <pathelement location="${target.tests}"/>
             </classpath>
-            <batchtest todir="${test.result.dir}">
+            <batchtest fork="no" todir="${test.result.dir}">
                 <formatter type="xml"/>
                 <fileset dir="${test.source}" includes="**/*Test.java" />
             </batchtest>
@@ -138,6 +142,42 @@
             </catch>
         </trycatch>
     </target>
+<!--    <target name="report">-->
+<!--        <trycatch>-->
+<!--            <try>-->
+
+<!--                <antcall target="test"/>-->
+
+<!--                <tstamp>-->
+<!--                    <format property="timestamp" pattern="MM-dd-yyyy-hh-mm-ss"/>-->
+<!--                </tstamp>-->
+
+<!--                <mkdir dir="${test.result.dir}/${timestamp}"/>-->
+
+<!--                <move todir="${test.result.dir}/${timestamp}">-->
+<!--                    <fileset dir="${test.result.dir}">-->
+<!--                        <include name="*.xml"/>-->
+<!--                    </fileset>-->
+<!--                </move>-->
+
+<!--                <exec executable="git">-->
+<!--                    <arg value="add"/>-->
+<!--                    <arg value="${test.result.dir}/${timestamp}"/>-->
+<!--                </exec>-->
+
+<!--                <exec executable="git">-->
+<!--                    <arg value="commit"/>-->
+<!--                    <arg value="-m"/>-->
+<!--                    <arg value="Generate test report ${timestamp}"/>-->
+<!--                </exec>-->
+<!--            </try>-->
+<!--            <catch>-->
+
+<!--                <echo message="Tests went wrong, report isn't generated"/>-->
+<!--            </catch>-->
+<!--        </trycatch>-->
+<!--    </target>-->
+
     <target name="report">
         <trycatch>
             <try>
@@ -156,6 +196,27 @@
                     </fileset>
                 </move>
 
+                <!-- Read the content of index.html to extract the coverage percentage -->
+                <loadfile property="coverage.html" srcFile="${target}/site/jacoco/index.html"/>
+                <property name="coverage" value="0"/>
+                <!-- Regex to extract coverage percentage -->
+                <propertyregex input="${coverage.html}" property="${coverage}"
+                               regexp="(?i)Total.*?([0-9]+(?:\\.[0-9]+)?)%" select="\1" defaultvalue="0"/>
+                <echo message="Extracted Coverage Value: ${coverage}"/>
+                <!-- Write test coverage result to a file -->
+                <if>
+                    <equals arg1="${coverage}" arg2="60"/>
+                    <then>
+                        <echo file="${test.result.dir}/${timestamp}/TEST-AreaResultTest.xml" append="true">
+                            Test coverage more 60%
+                        </echo>
+                    </then>
+                    <else>
+                        <echo file="${test.result.dir}/${timestamp}/TEST-AreaResultTest.xml" append="true">
+                            Test coverage less 60%
+                        </echo>
+                    </else>
+                </if>
                 <exec executable="git">
                     <arg value="add"/>
                     <arg value="${test.result.dir}/${timestamp}"/>
@@ -168,7 +229,6 @@
                 </exec>
             </try>
             <catch>
-
                 <echo message="Tests went wrong, report isn't generated"/>
             </catch>
         </trycatch>
@@ -198,4 +258,29 @@
         <antcall target="build"/>
 
     </target>
+<!--    <target name="coverage" description="Collect Coverage Report">-->
+<!--        <mkdir dir="${report.dir}"/>-->
+<!--        &lt;!&ndash; Creates the Junit Report &ndash;&gt;-->
+<!--        <junitreport todir="${report.dir}">-->
+<!--            <fileset dir="${report.dir}">-->
+<!--                <include name="TEST-*.xml"/>-->
+<!--            </fileset>-->
+<!--            <report format="frames" todir="${report.dir}/html"/>-->
+<!--        </junitreport>-->
+
+<!--        &lt;!&ndash; Creates the coverage Report.&ndash;&gt;-->
+<!--        <mkdir dir="${report.dir}/coverage"/>-->
+<!--        <jacoco:coverage>-->
+<!--            <executiondata>-->
+<!--                <file file="${coverage.dir}/jacoco.exec" />-->
+<!--            </executiondata>-->
+
+<!--            <structure name="Code Coverage">-->
+<!--                <classfiles>-->
+<!--                    <zipfileset src="${sources.lib.dir}/${test.jar.name}.jar"/>-->
+<!--                </classfiles>-->
+<!--            </structure>-->
+<!--            <html destdir="${report.dir}/coverage" />-->
+<!--        </jacoco:coverage>-->
+<!--    </target>-->
 </project>
