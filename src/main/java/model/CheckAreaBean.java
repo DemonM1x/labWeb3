@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+
 public class CheckAreaBean implements Serializable {
     @Id
     @Column(name = "id")
@@ -46,7 +46,10 @@ public class CheckAreaBean implements Serializable {
     }
 
 
-
+    @Override
+    public String toString(){
+        return "has a point X: "+x + " Y: "+ y + " Result: " + result;
+    }
 //    @Override
 //    public String toString() {
 //        return "CheckAreaBean{" +
