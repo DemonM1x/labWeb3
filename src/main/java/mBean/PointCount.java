@@ -38,6 +38,7 @@ public class PointCount extends NotificationBroadcasterSupport implements Serial
         sendNotification(notification);
     }
 
+
     @Override
     public long getCorrectPoint() {
         return correctPoint;
